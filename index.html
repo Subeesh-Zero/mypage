@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>LUXÉON | Digital showroom</title>
+    <!-- Google Fonts: Inter + Montserrat -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome 6 (free) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- AOS (Animate on scroll) -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <style>
+        /* RESET + BASE — obsidian black, electric blue accents, glassmorphism */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Inter", "Montserrat", sans-serif;
+            background-color: #0a0c0e;  /* obsidian base */
+            color: #f0f3f8;
+            line-height: 1.5;
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+
+        /* electric blue accent variable */
+        :root {
+            --accent: #2d9cdb;        /* vibrant electric blue */
+            --accent-glow: rgba(45, 156, 219, 0.5);
+            --glass-bg: rgba(18, 22, 28, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.06);
+            --card-bg: rgba(12, 16, 20, 0.6);
+        }
+
+        /* typography */
+        h1, h2, h3 {
+            font-weight: 300;
+            letter-spacing: -0.02em;
+        }
+        h1 {
+            font-size: clamp(2.8rem, 12vw, 5.5rem);
+            line-height: 1.1;
+            font-weight: 500;
+        }
+        h2 {
+            font-size: 2.8rem;
+            margin-bottom: 2rem;
+            position: relative;
+            display: inline-block;
+        }
+        h2:after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 80px;
+            height: 2px;
+            background: var(--accent);
+            box-shadow: 0 0 12px var(--accent-glow);
+        }
+        .section-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 5rem 2rem;
+        }
+        @media (max-width: 700px) {
+            .section-container {
+                padding: 3rem 1.5rem;
+            }
+            h2 {
+                font-size: 2.2rem;
+            }
+        }
+
+        /* glassmorphism core */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(14px) saturate(180%);
+            -webkit-backdrop-filter: blur(14px) saturate(180%);
+            border: 1px solid var(--glass-border);
+            border-radius: 28px;
+            box-shadow: 0 20px 40px -12px rgba(0,0,0,0.8);
+            transition: transform 0.2s ease, border-color 0.2s;
+        }
+        .glass-card:hover {
+            border-color: rgba(45, 156, 219, 0.4);
+        }
+
+        /* buttons */
+        .btn {
+            display: inline-block;
+            padding: 1rem 2.8rem;
+            border-radius: 50px;
+            font-weight: 500;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            text-decoration: none;
+            transition: 0.25s ease;
+            border: 1.5px solid transparent;
+            cursor: pointer;
+            background: transparent;
+            color: white;
+            border-color: var(--accent);
+            box-shadow: 0 0 8px transparent;
+        }
+        .btn-glow {
+            background: rgba(45, 156, 219, 0.03);
+            border-color: var(--accent);
+        }
+        .btn-glow:hover {
+            box-shadow: 0 0 22px var(--accent-glow), 0 0 40px rgba(45,156,219,0.3);
+            background: rgba(45, 156, 219, 0.1);
+            border-color: var(--accent);
+            transform: scale(1.02);
+        }
+
+        /* ---- HERO (fullscreen) ---- */
+        .hero {
+            height: 100vh;
+            min-height: 700px;
+            width: 100%;
+            background: linear-gradient(135deg, rgba(0,0,0,0.85) 0%, rgba(0,20,40,0.7) 100%), 
+                        url('https://images.unsplash.com/photo-1544829099-b9a0c07fad1a?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80') center/cover no-repeat;
+            background-attachment: fixed;  /* subtle parallax */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+        }
+        .hero-overlay {
+            max-width: 1000px;
+            padding: 2rem;
+        }
+        .hero h1 {
+            margin-bottom: 1.5rem;
+            text-shadow: 0 10px 30px rgba(0,0,0,0.7);
+        }
+        .hero .btn {
+            margin-top: 2rem;
+        }
+        .hero i {
+            margin-left: 8px;
+        }
+
+        /* ---- THE FLEET (grid) ---- */
+        .fleet-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        .car-card {
+            position: relative;
+            border-radius: 28px;
+            overflow: hidden;
+            aspect-ratio: 4 / 3;
+            background: #111;
+            box-shadow: 0 30px 40px -20px black;
+        }
+        .car-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        .car-card:hover img {
+            transform: scale(1.08);
+        }
+        /* always visible name badge (glass) */
+        .car-name-badge {
+            position: absolute;
+            bottom: 18px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+            font-weight: 500;
+            font-size: 1rem;
+            z-index: 3;
+            border-left: 3px solid var(--accent);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+        }
+        /* hover overlay specs (glass) */
+        .car-specs-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 0.8rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            z-index: 5;
+            border-radius: 28px;
+            border: 1px solid rgba(45,156,219,0.3);
+        }
+        .car-card:hover .car-specs-overlay {
+            opacity: 1;
+        }
+        .spec-item {
+            font-size: 1.2rem;
+            font-weight: 300;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(0,0,0,0.4);
+            padding: 0.3rem 1.5rem;
+            border-radius: 40px;
+            border-left: 2px solid var(--accent);
+        }
+        .spec-item i {
+            color: var(--accent);
+            width: 24px;
+        }
+        .car-model {
+            font-size: 1.8rem;
+            font-weight: 400;
+            margin-bottom: 0.2rem;
+            letter-spacing: 1px;
+        }
+        @media (max-width: 900px) {
+            .fleet-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (max-width: 550px) {
+            .fleet-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ---- WHY US (3 column) ---- */
+        .why-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        .why-item {
+            padding: 2.5rem 1.8rem;
+            text-align: center;
+            background: var(--card-bg);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--glass-border);
+            border-radius: 32px;
+            transition: all 0.2s;
+        }
+        .why-item i {
+            font-size: 3rem;
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+            text-shadow: 0 0 20px var(--accent-glow);
+        }
+        .why-item h3 {
+            font-size: 1.8rem;
+            font-weight: 400;
+            margin-bottom: 1rem;
+        }
+        .why-item p {
+            opacity: 0.7;
+            font-weight: 300;
+        }
+        @media (max-width: 800px) {
+            .why-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ---- VIRTUAL LOUNGE (testimonials + philosophy) ---- */
+        .lounge-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        .lounge-card {
+            padding: 3rem 2.5rem;
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            border-radius: 38px;
+            border: 1px solid var(--glass-border);
+        }
+        .lounge-card .quote-icon {
+            font-size: 3rem;
+            color: var(--accent);
+            opacity: 0.4;
+            margin-bottom: 1rem;
+        }
+        .lounge-card p {
+            font-size: 1.4rem;
+            font-weight: 300;
+            line-height: 1.5;
+        }
+        .testimonial-author {
+            margin-top: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .testimonial-author img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--accent);
+        }
+        .author-info h4 {
+            font-size: 1.2rem;
+        }
+        .author-info span {
+            opacity: 0.6;
+            font-size: 0.9rem;
+        }
+        @media (max-width: 700px) {
+            .lounge-grid {
+                grid-template-columns: 1fr;
+            }
+            .lounge-card p {
+                font-size: 1.2rem;
+            }
+        }
+
+        /* ---- CONNECT (minimal form + footer) ---- */
+        .connect-form {
+            max-width: 600px;
+            margin: 0 auto 3rem auto;
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            padding: 3rem;
+            border-radius: 48px;
+            border: 1px solid var(--glass-border);
+        }
+        .input-group {
+            margin-bottom: 1.8rem;
+        }
+        .input-group input, .input-group textarea {
+            width: 100%;
+            padding: 1.2rem 1.8rem;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 60px;
+            font-size: 1rem;
+            color: white;
+            font-family: inherit;
+            transition: border 0.2s, box-shadow 0.2s;
+        }
+        .input-group textarea {
+            border-radius: 30px;
+            resize: vertical;
+        }
+        .input-group input:focus, .input-group textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(45,156,219,0.2);
+        }
+        .input-group input::placeholder, .input-group textarea::placeholder {
+            color: rgba(255,255,255,0.4);
+            font-weight: 300;
+        }
+        .form-btn {
+            background: transparent;
+            border: 1.5px solid var(--accent);
+            color: white;
+            padding: 1.2rem 2rem;
+            width: 100%;
+            border-radius: 60px;
+            font-size: 1.3rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 0 10px transparent;
+        }
+        .form-btn:hover {
+            box-shadow: 0 0 30px var(--accent-glow);
+            background: rgba(45,156,219,0.1);
+        }
+
+        /* footer */
+        .footer {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+            padding-top: 3rem;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+        .social-links {
+            display: flex;
+            gap: 2rem;
+        }
+        .social-links a {
+            color: white;
+            font-size: 1.8rem;
+            opacity: 0.6;
+            transition: opacity 0.2s, color 0.2s, text-shadow 0.2s;
+        }
+        .social-links a:hover {
+            opacity: 1;
+            color: var(--accent);
+            text-shadow: 0 0 15px var(--accent);
+        }
+        .footer-copyright {
+            opacity: 0.4;
+            font-weight: 300;
+        }
+        @media (max-width: 500px) {
+            .footer {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        /* misc */
+        .text-accent {
+            color: var(--accent);
+        }
+        ::selection {
+            background: var(--accent);
+            color: black;
+        }
+    </style>
+</head>
+<body>
+    <!-- HERO SECTION - fullscreen immersive -->
+    <section class="hero" id="home">
+        <div class="hero-overlay" data-aos="fade-up" data-aos-duration="1200">
+            <h1>Redefining Luxury<br>on Wheels.</h1>
+            <a href="#fleet" class="btn btn-glow"><span>View Collection</span> <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+    </section>
+
+    <!-- THE FLEET (portfolio grid) -->
+    <section class="section-container" id="fleet" data-aos="fade-up">
+        <h2>The fleet</h2>
+        <div class="fleet-grid">
+            <!-- car 1 -->
+            <div class="car-card" data-aos="zoom-in" data-aos-delay="100">
+                <img src="https://images.unsplash.com/photo-1580273916550-e323be2ae537?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Porsche 911 Turbo S" loading="lazy">
+                <div class="car-name-badge">Porsche 911 Turbo S</div>
+                <div class="car-specs-overlay">
+                    <span class="car-model">911 Turbo S</span>
+                    <span class="spec-item"><i class="fa-solid fa-engine"></i> 640 HP</span>
+                    <span class="spec-item"><i class="fa-solid fa-gauge-high"></i> 205 mph</span>
+                    <span class="spec-item"><i class="fa-solid fa-tag"></i> $215,000</span>
+                </div>
+            </div>
+            <!-- car 2 -->
+            <div class="car-card" data-aos="zoom-in" data-aos-delay="200">
+                <img src="https://images.unsplash.com/photo-1555215695-3004980ad54e?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Mercedes AMG GT" loading="lazy">
+                <div class="car-name-badge">Mercedes-AMG GT</div>
+                <div class="car-specs-overlay">
+                    <span class="car-model">AMG GT R</span>
+                    <span class="spec-item"><i class="fa-solid fa-engine"></i> 577 HP</span>
+                    <span class="spec-item"><i class="fa-solid fa-gauge-high"></i> 198 mph</span>
+                    <span class="spec-item"><i class="fa-solid fa-tag"></i> $185,000</span>
+                </div>
+            </div>
+            <!-- car 3 -->
+            <div class="car-card" data-aos="zoom-in" data-aos-delay="300">
+                <img src="https://images.unsplash.com/photo-1544829099-b9a0c07fad1a?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Lamborghini Aventador" loading="lazy">
+                <div class="car-name-badge">Lamborghini Aventador</div>
+                <div class="car-specs-overlay">
+                    <span class="car-model">Aventador SVJ</span>
+                    <span class="spec-item"><i class="fa-solid fa-engine"></i> 770 HP</span>
+                    <span class="spec-item"><i class="fa-solid fa-gauge-high"></i> 217 mph</span>
+                    <span class="spec-item"><i class="fa-solid fa-tag"></i> $520,000</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- WHY US (3 columns) -->
+    <section class="section-container" data-aos="fade-up">
+        <h2>Why us</h2>
+        <div class="why-grid">
+            <div class="why-item glass-card" data-aos="flip-left" data-aos-delay="50">
+                <i class="fa-regular fa-gem"></i>
+                <h3>Exclusivity</h3>
+                <p>Limited editions, private viewings, and bespoke configuration — only for our clients.</p>
+            </div>
+            <div class="why-item glass-card" data-aos="flip-left" data-aos-delay="150">
+                <i class="fa-regular fa-hand-sparkles"></i>
+                <h3>Premium Service</h3>
+                <p>White-glove delivery, concierge support, and aftercare that exceeds expectations.</p>
+            </div>
+            <div class="why-item glass-card" data-aos="flip-left" data-aos-delay="250">
+                <i class="fa-solid fa-globe"></i>
+                <h3>Global Delivery</h3>
+                <p>We deliver to any continent, with full logistics, customs, and tracking handled.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- VIRTUAL LOUNGE (testimonials + brand philosophy) -->
+    <section class="section-container" data-aos="fade-up">
+        <h2>Virtual lounge</h2>
+        <div class="lounge-grid">
+            <!-- philosophy card -->
+            <div class="lounge-card" data-aos="fade-right">
+                <div class="quote-icon"><i class="fa-regular fa-compass"></i></div>
+                <p>“We don't just sell cars — we curate experiences. Every vehicle in our collection is chosen for its engineering soul and design legacy.”</p>
+                <div class="testimonial-author" style="margin-top: 3rem;">
+                    <i class="fa-solid fa-rings-wedding" style="font-size: 2.5rem; color: var(--accent); opacity: 0.5;"></i>
+                    <div class="author-info">
+                        <h4>LUXÉON philosophy</h4>
+                        <span>since 2008</span>
+                    </div>
+                </div>
+            </div>
+            <!-- testimonial card -->
+            <div class="lounge-card" data-aos="fade-left">
+                <div class="quote-icon"><i class="fa-solid fa-quote-right"></i></div>
+                <p>“The attention to detail was breathtaking. They flew me to Munich for a private unveiling. This isn’t a showroom; it’s a sanctuary for enthusiasts.”</p>
+                <div class="testimonial-author">
+                    <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" alt="client">
+                    <div class="author-info">
+                        <h4>Jonathan V.</h4>
+                        <span>collector, Geneva</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONNECT (minimal contact + footer) -->
+    <section class="section-container" data-aos="fade-up">
+        <h2>Connect</h2>
+        <div class="connect-form glass-card" data-aos="zoom-in-up">
+            <form action="#" method="post">
+                <div class="input-group">
+                    <input type="text" placeholder="Full name" required>
+                </div>
+                <div class="input-group">
+                    <input type="email" placeholder="Email address" required>
+                </div>
+                <div class="input-group">
+                    <textarea rows="3" placeholder="Your message..."></textarea>
+                </div>
+                <button type="submit" class="form-btn">Send message <i class="fa-regular fa-paper-plane"></i></button>
+            </form>
+        </div>
+
+        <!-- footer with socials -->
+        <footer class="footer">
+            <div class="footer-copyright">
+                © LUXÉON | digital showroom
+            </div>
+            <div class="social-links">
+                <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                <a href="#" aria-label="X (Twitter)"><i class="fa-brands fa-x-twitter"></i></a>
+                <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+                <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+            </div>
+        </footer>
+    </section>
+
+    <!-- AOS script + initialization -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 900,           // values from 0 to 3000
+            once: false,              // whether animation should happen only once
+            mirror: false,            // whether elements should animate out while scrolling past them
+            offset: 40,
+            easing: 'ease-out-quad',
+        });
+
+        // optional: smooth scroll for "View Collection" (already uses id)
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if(target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+
+    <!-- subtle extra glow for button (inline style not needed) -->
+</body>
+</html>
